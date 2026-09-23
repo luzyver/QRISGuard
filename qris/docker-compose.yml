@@ -1,0 +1,12 @@
+services:
+  qris:
+    build: .
+    env_file: .env
+    ports:
+      - "127.0.0.1:8888:8888"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: qrisguard
+    external: true
