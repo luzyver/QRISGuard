@@ -2,6 +2,15 @@
 
 Sistem verifikasi pembayaran QRIS otomatis tanpa API official. Generate QRIS dinamis, polling pembayaran, dan verifikasi otomatis.
 
+> Status: experimental. Jangan gunakan untuk transaksi produksi sebelum menambahkan autentikasi webhook, secret management, dan monitoring.
+
+## Keamanan
+
+- Jangan commit file `.env`, QRIS asli, password, token, atau data notifikasi pembayaran.
+- Ganti semua nilai contoh sebelum deployment dan jangan expose PostgreSQL ke internet.
+- Webhook saat ini belum memiliki autentikasi bawaan; letakkan di jaringan privat atau tambahkan autentikasi sebelum dipakai di luar jaringan tepercaya.
+- Laporkan kerentanan secara privat melalui [GitHub Security Advisories](https://github.com/luzyver/QRISGuard/security/advisories/new), bukan issue publik.
+
 ## Arsitektur
 
 ```mermaid
@@ -124,14 +133,14 @@ GET    /health                         Health check
 
 ```env
 POSTGRES_USER=user
-POSTGRES_PASSWORD=password
+POSTGRES_PASSWORD=change-me
 POSTGRES_DB=danabisnis
 ```
 
 ### webhook/.env
 
 ```env
-DATABASE_URL=postgres://user:password@127.0.0.1:5432/danabisnis?sslmode=disable
+DATABASE_URL=postgres://user:change-me@127.0.0.1:5432/danabisnis?sslmode=disable
 PORT=3030
 ```
 
@@ -147,3 +156,12 @@ POLL_INTERVAL_SEC=5
 ## Build APK (CI)
 
 APK di-build otomatis via GitHub Actions setiap push ke `master`. Download dari tab **Actions > Artifacts**.
+
+## Pengembangan
+
+Jalankan test backend dari root repo:
+
+```bash
+cd qris && go test ./...
+cd ../webhook && go test ./...
+```
